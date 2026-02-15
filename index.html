@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlashMind - Master Your Learning</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo" onclick="showPage('home')">
+                <div class="logo-icon">📚</div>
+                <span>FlashMind</span>
+            </a>
+            <div class="nav-links">
+                <a href="#" onclick="showPage('home'); return false;" class="nav-link" data-page="home">Home</a>
+                <a href="#" onclick="showPage('decks'); return false;" class="nav-link" data-page="decks">Decks</a>
+                <a href="#" onclick="showPage('statistics'); return false;" class="nav-link" data-page="statistics">Statistics</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home-page" class="page active">
+        <div class="container">
+            <div class="hero">
+                <h1 class="hero-title">Master Your Learning</h1>
+                <p class="hero-subtitle">Create, study, and master flashcards with our intelligent spaced repetition system</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon purple">📚</div>
+                    <div class="stat-value" id="total-decks">0</div>
+                    <div class="stat-label">Total Decks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon blue">🎯</div>
+                    <div class="stat-value" id="total-cards">0</div>
+                    <div class="stat-label">Total Cards</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">✅</div>
+                    <div class="stat-value" id="mastered-cards">0</div>
+                    <div class="stat-label">Mastered</div>
+                </div>
+            </div>
+
+            <div class="action-grid">
+                <div class="action-card" onclick="showPage('decks')">
+                    <div class="action-icon purple">➕</div>
+                    <h2>Create New Deck</h2>
+                    <p>Start learning by creating your first flashcard deck</p>
+                </div>
+                <div class="action-card" onclick="showPage('statistics')">
+                    <div class="action-icon blue">📊</div>
+                    <h2>View Progress</h2>
+                    <p>Track your learning progress and statistics</p>
+                </div>
+            </div>
+
+            <div id="recent-decks-section" style="display: none;">
+                <h2 class="section-title">Your Decks</h2>
+                <div id="recent-decks" class="decks-grid"></div>
+            </div>
+
+            <div id="empty-state" class="empty-state">
+                <div class="empty-icon">📚</div>
+                <p>No decks yet. Create your first deck to get started!</p>
+                <button class="btn-primary" onclick="showPage('decks')">Create Your First Deck</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Decks Page -->
+    <div id="decks-page" class="page">
+        <div class="container">
+            <div class="page-header">
+                <div>
+                    <h1>Your Decks</h1>
+                    <p>Organize and manage your flashcard decks</p>
+                </div>
+                <button class="btn-primary" onclick="openDeckModal()">➕ New Deck</button>
+            </div>
+
+            <div id="decks-list" class="decks-grid"></div>
+
+            <div id="decks-empty-state" class="empty-state">
+                <div class="empty-icon">📚</div>
+                <p>No decks yet. Create your first deck!</p>
+                <button class="btn-primary" onclick="openDeckModal()">Create Your First Deck</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deck Detail Page -->
+    <div id="deck-detail-page" class="page">
+        <div class="container">
+            <button class="back-btn" onclick="showPage('decks')">← Back to Decks</button>
+            
+            <div id="deck-header" class="deck-header"></div>
+
+            <div class="page-header">
+                <h2>Cards (<span id="cards-count">0</span>)</h2>
+                <button class="btn-primary" onclick="openCardModal()">➕ Add Card</button>
+            </div>
+
+            <div id="cards-list" class="cards-grid"></div>
+
+            <div id="cards-empty-state" class="empty-state">
+                <div class="empty-icon">📝</div>
+                <p>No cards yet. Add your first flashcard!</p>
+                <button class="btn-primary" onclick="openCardModal()">Add Your First Card</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Study Page -->
+    <div id="study-page" class="page">
+        <div class="container study-container">
+            <div class="study-header">
+                <button class="back-btn" onclick="goBackFromStudy()">← Back to Deck</button>
+                <button class="reset-btn" onclick="resetStudy()">🔄 Reset</button>
+            </div>
+
+            <div class="progress-bar-container">
+                <div class="progress-info">
+                    <span>Card <span id="current-card-num">1</span> of <span id="total-cards-num">0</span></span>
+                    <span id="remaining-cards">0 remaining</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="study-card-container">
+                <div class="study-card" id="study-card">
+                    <div class="card-label" id="card-label">Question</div>
+                    <div class="card-content" id="card-content"></div>
+                    <button class="flip-btn" onclick="flipCard()" id="flip-btn">🔄 Show Answer</button>
+                </div>
+            </div>
+
+            <div id="answer-buttons" class="answer-buttons" style="display: none;">
+                <button class="btn-incorrect" onclick="answerCard('incorrect')">❌ Incorrect</button>
+                <button class="btn-correct" onclick="answerCard('correct')">✅ Correct</button>
+            </div>
+
+            <div id="study-complete" class="study-complete" style="display: none;">
+                <div class="complete-icon">🎉</div>
+                <h2>Study Session Complete!</h2>
+                <p>Great job! You've reviewed all cards.</p>
+                <button class="btn-primary" onclick="goBackFromStudy()">Back to Deck</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Page -->
+    <div id="statistics-page" class="page">
+        <div class="container">
+            <h1>Statistics</h1>
+            <p class="page-subtitle">Track your learning progress and performance</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon purple">📚</div>
+                    <div class="stat-value" id="stat-total-cards">0</div>
+                    <div class="stat-label">Total Cards</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">🎯</div>
+                    <div class="stat-value" id="stat-mastery-rate">0%</div>
+                    <div class="stat-label">Mastery Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon blue">📈</div>
+                    <div class="stat-value" id="stat-accuracy">0%</div>
+                    <div class="stat-label">Accuracy</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange">⏱️</div>
+                    <div class="stat-value" id="stat-total-reviews">0</div>
+                    <div class="stat-label">Total Reviews</div>
+                </div>
+            </div>
+
+            <div class="progress-section">
+                <h2>Progress Breakdown</h2>
+                <div class="progress-breakdown">
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>New Cards</span>
+                            <span id="new-count">0 (0%)</span>
+                        </div>
+                        <div class="progress-bar-small">
+                            <div id="new-progress" class="progress-fill gray"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>Learning</span>
+                            <span id="learning-count">0 (0%)</span>
+                        </div>
+                        <div class="progress-bar-small">
+                            <div id="learning-progress" class="progress-fill blue"></div>
+                        </div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>Mastered</span>
+                            <span id="mastered-count">0 (0%)</span>
+                        </div>
+                        <div class="progress-bar-small">
+                            <div id="mastered-progress" class="progress-fill green"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="deck-performance" class="deck-performance"></div>
+        </div>
+    </div>
+
+    <!-- Deck Modal -->
+    <div id="deck-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="deck-modal-title">Create New Deck</h2>
+                <button class="modal-close" onclick="closeDeckModal()">✕</button>
+            </div>
+            <form id="deck-form" onsubmit="saveDeck(event)">
+                <div class="form-group">
+                    <label>Deck Name</label>
+                    <input type="text" id="deck-name" required placeholder="Enter deck name">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="deck-description" placeholder="Enter description (optional)" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Color</label>
+                    <input type="color" id="deck-color" value="#8b5cf6">
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-primary">Create</button>
+                    <button type="button" class="btn-secondary" onclick="closeDeckModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Card Modal -->
+    <div id="card-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="card-modal-title">Create New Card</h2>
+                <button class="modal-close" onclick="closeCardModal()">✕</button>
+            </div>
+            <form id="card-form" onsubmit="saveCard(event)">
+                <div class="form-group">
+                    <label>Front (Question)</label>
+                    <textarea id="card-front" required placeholder="Enter the question or term" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Back (Answer)</label>
+                    <textarea id="card-back" required placeholder="Enter the answer or definition" rows="4"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-primary">Create</button>
+                    <button type="button" class="btn-secondary" onclick="closeCardModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
