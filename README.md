@@ -1,6 +1,6 @@
 # FlashMind - Professional Flashcard Learning Platform
 
-A modern, dark-themed flashcard website built with React and Tailwind CSS. Master your learning with an intuitive interface and intelligent progress tracking.
+A modern, dark-themed flashcard website built with HTML , JS and Tailwind CSS. Master your learning with an intuitive interface and intelligent progress tracking.
 
 ## Features
 
@@ -14,32 +14,10 @@ A modern, dark-themed flashcard website built with React and Tailwind CSS. Maste
 
 ## Getting Started
 
-### Prerequisites
 
-- Node.js (v16 or higher)
-- npm or yarn
 
-### Installation
 
-1. Install dependencies:
-```bash
-npm install
-```
 
-2. Start the development server:
-```bash
-npm run dev
-```
-
-3. Open your browser and navigate to `http://localhost:5173`
-
-### Build for Production
-
-```bash
-npm run build
-```
-
-The built files will be in the `dist` directory.
 
 ## Usage
 
@@ -50,15 +28,15 @@ The built files will be in the `dist` directory.
 
 ## Tech Stack
 
-- React 18
-- React Router DOM
 - Tailwind CSS
-- Vite
+- HTML
 - Lucide React (Icons)
 - Local Storage API
+- JS
 
 ## License
 
 MIT
+
 
 
